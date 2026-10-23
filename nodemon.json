@@ -1,0 +1,17 @@
+{
+  "watch": [
+    "server.js",
+    "app.js",
+    "config",
+    "models",
+    "routes",
+    "controllers",
+    "services",
+    "validators",
+    "middlewares",
+    "utils",
+    ".env"
+  ],
+  "ext": "js,json,env",
+  "exec": "node --env-file-if-exists=.env server.js"
+}

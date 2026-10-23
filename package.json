@@ -1,0 +1,31 @@
+{
+  "name": "portfolio-v2-server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node --env-file-if-exists=.env server.js",
+    "db:sync": "node --env-file-if-exists=.env scripts/db-sync.js",
+    "db:seed": "node --env-file-if-exists=.env scripts/db-seed.js",
+    "storage:setup": "node --env-file-if-exists=.env scripts/storage-setup.js",
+    "db:add-token-version": "node --env-file-if-exists=.env scripts/db-add-token-version.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.4.0",
+    "nodemailer": "^10.1.2",
+    "pg": "^8.23.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
