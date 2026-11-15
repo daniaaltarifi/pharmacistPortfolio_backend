@@ -12,6 +12,7 @@
     "storage:setup": "node --env-file-if-exists=.env scripts/storage-setup.js",
     "db:add-token-version": "node --env-file-if-exists=.env scripts/db-add-token-version.js",
     "db:add-gallery-title": "node --env-file-if-exists=.env scripts/db-add-gallery-title.js",
+    "db:add-news-status": "node --env-file-if-exists=.env scripts/db-add-news-status.js",
     "storage:cleanup": "node --env-file-if-exists=.env scripts/storage-cleanup.js"
   },
   "dependencies": {

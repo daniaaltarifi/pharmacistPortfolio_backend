@@ -7,8 +7,9 @@ const withCategory = {
 }
 
 // Whitelist: only these fields can be written from a request body.
-function pickFields({ categoryId, publishedAt, title, description, imageUrl, link }) {
+function pickFields({ categoryId, publishedAt, title, description, imageUrl, link, status }) {
   const fields = {}
+  if (status !== undefined) fields.status = status
   if (categoryId !== undefined) fields.categoryId = categoryId
   if (publishedAt !== undefined) fields.publishedAt = publishedAt
   if (title !== undefined) fields.title = title.trim()
@@ -24,11 +25,14 @@ async function assertCategoryExists(categoryId) {
   }
 }
 
-// Newest first. Optional ?categoryId= filter.
-export async function listNews({ categoryId } = {}) {
+// Newest first. Optional ?categoryId= filter. Drafts are only included for admins.
+export async function listNews({ categoryId, includeDrafts = false } = {}) {
+  const where = {}
+  if (categoryId) where.categoryId = categoryId
+  if (!includeDrafts) where.status = 'active'
   return News.findAll({
     ...withCategory,
-    where: categoryId ? { categoryId } : undefined,
+    where,
     order: [
       ['publishedAt', 'DESC'],
       ['createdAt', 'DESC'],
@@ -36,9 +40,10 @@ export async function listNews({ categoryId } = {}) {
   })
 }
 
-export async function getNews(id) {
+// A draft looks like it does not exist to the public.
+export async function getNews(id, { includeDrafts = false } = {}) {
   const news = await News.findByPk(id, withCategory)
-  if (!news) throw new AppError('News not found', 404)
+  if (!news || (!includeDrafts && news.status !== 'active')) throw new AppError('News not found', 404)
   return news
 }
 
@@ -46,15 +51,15 @@ export async function createNews(input) {
   const fields = pickFields(input)
   await assertCategoryExists(fields.categoryId)
   const news = await News.create(fields)
-  return getNews(news.id)
+  return getNews(news.id, { includeDrafts: true })
 }
 
 export async function updateNews(id, input) {
-  const news = await getNews(id)
+  const news = await getNews(id, { includeDrafts: true })
   const fields = pickFields(input)
   if (fields.categoryId !== undefined) await assertCategoryExists(fields.categoryId)
   await news.update(fields)
-  return getNews(id)
+  return getNews(id, { includeDrafts: true })
 }
 
 export async function deleteNews(id) {

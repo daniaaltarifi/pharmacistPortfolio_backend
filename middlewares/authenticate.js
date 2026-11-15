@@ -26,6 +26,14 @@ export async function authenticate(req, res, next) {
   }
 }
 
+// For public routes that show more to a signed-in admin (e.g. draft news).
+// No Authorization header -> continue as a visitor. A header that is present must be valid,
+// so an expired dashboard session gets a 401 (and a sign-in prompt) instead of silently losing drafts.
+export function optionalAuthenticate(req, res, next) {
+  if (!req.get('authorization')) return next()
+  return authenticate(req, res, next)
+}
+
 // Use after `authenticate`, e.g. authorize('admin').
 export const authorize =
   (...roles) =>

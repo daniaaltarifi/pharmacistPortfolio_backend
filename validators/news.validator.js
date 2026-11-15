@@ -3,7 +3,8 @@ const TEXT_FIELDS = [
   ['title', 'Title', 200],
   ['description', 'Description', 20000],
 ]
-const FIELDS = [...TEXT_FIELDS.map(([f]) => f), 'categoryId', 'publishedAt', 'imageUrl', 'link']
+const FIELDS = [...TEXT_FIELDS.map(([f]) => f), 'categoryId', 'publishedAt', 'imageUrl', 'link', 'status']
+const STATUSES = ['draft', 'active']
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
@@ -23,7 +24,7 @@ const isLink = (v) => {
 // `partial: true` is for PATCH: fields are optional, but at least one must be present.
 export function validateNews(input = {}, { partial = false } = {}) {
   const errors = {}
-  const { categoryId, publishedAt, imageUrl, link } = input
+  const { categoryId, publishedAt, imageUrl, link, status } = input
 
   for (const [field, label, max] of TEXT_FIELDS) {
     const value = input[field]
@@ -47,6 +48,11 @@ export function validateNews(input = {}, { partial = false } = {}) {
   // null or "" clears the link.
   if (link !== undefined && link !== null && link !== '' && !isLink(link)) {
     errors.link = 'link must be a full http(s) URL, e.g. https://example.com/article (max 500 characters)'
+  }
+
+  // Optional on create (defaults to "active").
+  if (status !== undefined && !STATUSES.includes(status)) {
+    errors.status = `status must be one of: ${STATUSES.join(', ')}`
   }
 
   if (partial && !FIELDS.some((f) => input[f] !== undefined)) {
