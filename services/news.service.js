@@ -58,6 +58,6 @@ export async function updateNews(id, input) {
 }
 
 export async function deleteNews(id) {
-  const deleted = await News.destroy({ where: { id } })
+  const deleted = await News.destroy({ where: { id }, individualHooks: true }) // runs the image-cleanup hook
   if (!deleted) throw new AppError('News not found', 404)
 }

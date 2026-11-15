@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/database.js'
 
-// One photo in the gallery page. Only the image URL is stored.
+// One photo in the gallery page, with an optional title shown as its caption.
 export const GalleryImage = sequelize.define(
   'GalleryImage',
   {
@@ -15,6 +15,11 @@ export const GalleryImage = sequelize.define(
       type: DataTypes.STRING(500),
       allowNull: false,
       validate: { notEmpty: true },
+    },
+    // Optional caption; existing photos have none (null).
+    title: {
+      type: DataTypes.STRING(200),
+      allowNull: true,
     },
   },
   {

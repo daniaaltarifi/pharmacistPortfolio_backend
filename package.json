@@ -10,7 +10,9 @@
     "db:sync": "node --env-file-if-exists=.env scripts/db-sync.js",
     "db:seed": "node --env-file-if-exists=.env scripts/db-seed.js",
     "storage:setup": "node --env-file-if-exists=.env scripts/storage-setup.js",
-    "db:add-token-version": "node --env-file-if-exists=.env scripts/db-add-token-version.js"
+    "db:add-token-version": "node --env-file-if-exists=.env scripts/db-add-token-version.js",
+    "db:add-gallery-title": "node --env-file-if-exists=.env scripts/db-add-gallery-title.js",
+    "storage:cleanup": "node --env-file-if-exists=.env scripts/storage-cleanup.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",

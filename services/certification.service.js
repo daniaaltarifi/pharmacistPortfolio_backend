@@ -38,6 +38,6 @@ export async function updateCertification(id, input) {
 }
 
 export async function deleteCertification(id) {
-  const deleted = await Certification.destroy({ where: { id } })
+  const deleted = await Certification.destroy({ where: { id }, individualHooks: true }) // runs the image-cleanup hook
   if (!deleted) throw new AppError('Certification not found', 404)
 }

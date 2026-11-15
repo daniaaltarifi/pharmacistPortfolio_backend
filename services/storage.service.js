@@ -67,3 +67,31 @@ export async function deleteImage(path) {
   const { error } = await supabase.storage.from(env.storage.bucket).remove([path])
   if (error) throw new AppError(`Image delete failed: ${error.message}`, 502)
 }
+
+// "https://<ref>.supabase.co/storage/v1/object/public/images/2026/10/x.webp" -> "2026/10/x.webp".
+// Returns null for anything that isn't a file in our bucket (site paths like "/images/...", other websites).
+export function storagePathFromUrl(url) {
+  if (!isStorageConfigured || typeof url !== 'string') return null
+  const prefix = `${env.storage.supabaseUrl.replace(/\/+$/, '')}/storage/v1/object/public/${env.storage.bucket}/`
+  if (!url.startsWith(prefix)) return null
+  const path = decodeURIComponent(url.slice(prefix.length).split(/[?#]/)[0])
+  return path || null
+}
+
+// Every file in the bucket, e.g. ["2026/10/a.webp", ...] (uploads are grouped in year/month folders).
+export async function listAllImagePaths(prefix = '') {
+  assertConfigured()
+  const paths = []
+  for (let offset = 0; ; offset += 1000) {
+    const { data, error } = await supabase.storage.from(env.storage.bucket).list(prefix, { limit: 1000, offset })
+    if (error) throw new AppError(`Listing storage failed: ${error.message}`, 502)
+    for (const entry of data) {
+      const full = prefix ? `${prefix}/${entry.name}` : entry.name
+      // Folders have no id; files do.
+      if (entry.id === null) paths.push(...(await listAllImagePaths(full)))
+      else if (!entry.name.startsWith('.')) paths.push(full)
+    }
+    if (data.length < 1000) break
+  }
+  return paths
+}

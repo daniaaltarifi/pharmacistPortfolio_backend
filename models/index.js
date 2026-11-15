@@ -18,6 +18,7 @@ import { GalleryImage } from './galleryImage.model.js'
 import { ContactMessage } from './contactMessage.model.js'
 import { ContactReply } from './contactReply.model.js'
 import { User } from './user.model.js'
+import { registerImageCleanup } from '../services/imageCleanup.service.js'
 
 // A profile has many bullet points; deleting a profile deletes its points.
 ProfessionalProfile.hasMany(ProfilePoint, {
@@ -47,6 +48,9 @@ ContactMessage.hasMany(ContactReply, {
   onDelete: 'CASCADE',
 })
 ContactReply.belongsTo(ContactMessage, { as: 'message', foreignKey: 'messageId' })
+
+// Old uploaded images are removed from Supabase Storage when replaced or when their record is deleted.
+registerImageCleanup([News, Event, Award, Certification, Project, Report, GalleryImage])
 
 export {
   sequelize,

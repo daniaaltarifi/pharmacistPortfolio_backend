@@ -39,6 +39,6 @@ export async function updateAward(id, input) {
 }
 
 export async function deleteAward(id) {
-  const deleted = await Award.destroy({ where: { id } })
+  const deleted = await Award.destroy({ where: { id }, individualHooks: true }) // runs the image-cleanup hook
   if (!deleted) throw new AppError('Award not found', 404)
 }

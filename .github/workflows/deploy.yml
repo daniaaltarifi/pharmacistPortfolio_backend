@@ -1,0 +1,36 @@
+name: Deploy PharmacistPortfolio Backend to Hostinger
+
+on:
+  push:
+    branches:
+      - main  # Change this if your branch is named 'master'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
+          # Add every variable you use here
+
+      - name: Install dependencies
+        run: npm install --force
+
+      - name: Build Vite project
+        run: npm run build
+
+      - name: Sync files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ./
+          protocol: ftp

@@ -37,6 +37,6 @@ export async function updateReport(id, input) {
 }
 
 export async function deleteReport(id) {
-  const deleted = await Report.destroy({ where: { id } })
+  const deleted = await Report.destroy({ where: { id }, individualHooks: true }) // runs the image-cleanup hook
   if (!deleted) throw new AppError('Report not found', 404)
 }

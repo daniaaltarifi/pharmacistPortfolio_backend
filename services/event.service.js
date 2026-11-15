@@ -40,6 +40,6 @@ export async function updateEvent(id, input) {
 }
 
 export async function deleteEvent(id) {
-  const deleted = await Event.destroy({ where: { id } })
+  const deleted = await Event.destroy({ where: { id }, individualHooks: true }) // runs the image-cleanup hook
   if (!deleted) throw new AppError('Event not found', 404)
 }

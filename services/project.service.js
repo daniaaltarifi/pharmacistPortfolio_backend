@@ -33,6 +33,6 @@ export async function updateProject(id, input) {
 }
 
 export async function deleteProject(id) {
-  const deleted = await Project.destroy({ where: { id } })
+  const deleted = await Project.destroy({ where: { id }, individualHooks: true }) // runs the image-cleanup hook
   if (!deleted) throw new AppError('Project not found', 404)
 }
