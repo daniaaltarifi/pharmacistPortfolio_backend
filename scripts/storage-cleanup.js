@@ -2,10 +2,10 @@
 // or replaced before automatic cleanup existed) and optionally deletes them.
 //   npm run storage:cleanup              -> list unused files only (safe)
 //   npm run storage:cleanup -- --delete  -> delete them
-import { sequelize, News, Event, Award, Certification, Project, Report, GalleryImage } from '../models/index.js'
+import { sequelize, News, Event, Award, Certification, Project, Report, GalleryImage, Training } from '../models/index.js'
 import { deleteImage, listAllImagePaths, storagePathFromUrl } from '../services/storage.service.js'
 
-const IMAGE_MODELS = [News, Event, Award, Certification, Project, Report, GalleryImage]
+const IMAGE_MODELS = [News, Event, Award, Certification, Project, Report, GalleryImage, Training]
 const shouldDelete = process.argv.includes('--delete')
 
 try {

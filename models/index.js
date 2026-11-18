@@ -50,7 +50,7 @@ ContactMessage.hasMany(ContactReply, {
 ContactReply.belongsTo(ContactMessage, { as: 'message', foreignKey: 'messageId' })
 
 // Old uploaded images are removed from Supabase Storage when replaced or when their record is deleted.
-registerImageCleanup([News, Event, Award, Certification, Project, Report, GalleryImage])
+registerImageCleanup([News, Event, Award, Certification, Project, Report, GalleryImage, Training])
 
 export {
   sequelize,

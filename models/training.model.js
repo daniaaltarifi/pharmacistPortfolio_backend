@@ -25,6 +25,11 @@ export const Training = sequelize.define(
       allowNull: false,
       validate: { isInt: true, min: 1900, max: 2100 },
     },
+    // Optional photo (certificate, venue, ...): a Supabase Storage URL or a site path like "/images/...".
+    imageUrl: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
   },
   {
     tableName: 'trainings',
